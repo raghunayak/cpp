@@ -24,7 +24,7 @@ namespace my {
                 ref_count = new int;
                 *ref_count = 1;
             }
-            catch (std::bad_alloc e) {
+            catch (std::bad_alloc& e) {
                 std::cerr << "Memory allocation error: " << e.what();
             }
         }
@@ -107,22 +107,31 @@ public:
     ~Derived() { std::cout << "  Derived::~Derived()\n"; }
 };
 
-my::shared_ptr<Base> function() 
+my::shared_ptr<Base> function()
 {
     my::shared_ptr<Base> ptr = new Derived();
     return ptr;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    // Default constructor
     my::shared_ptr<Base> ptr1;
-    
+
     {
+        // Parameterized constructor
         my::shared_ptr<Base> ptr2 = function();
+
+        // operator function call
         ptr2->set_data(100);
+
+        // copy constructor call
         my::shared_ptr<Base> ptr3 = ptr2;
+
+        // assignment operator call
         ptr1 = ptr3;
     }
+    // operator function call
     std::cout << "  data set to: " << (*ptr1).get_data() << std::endl;
 
     return 0;
